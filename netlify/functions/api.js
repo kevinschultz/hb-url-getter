@@ -53,16 +53,14 @@ exports.handler = async (event, context) => {
     // Make the request
     const response = await fetch(url, fetchOptions);
     
-    // Get content type and length
-    const contentType = response.headers.get('content-type');
-    const contentLength = response.headers.get('content-length');
+    // Get the response body as text first
+    const responseText = await response.text();
     
-    console.log(`Response status: ${response.status}, Content-Type: ${contentType}, Content-Length: ${contentLength}`);
-    
-    // Handle empty responses
-    if (!contentLength || contentLength === '0' || response.status === 204) {
+    // Special case for empty responses (like enrollment endpoint)
+    if (!responseText || responseText.length === 0) {
+      console.log('Empty response body detected');
       return {
-        statusCode: response.status || 200,
+        statusCode: response.status,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
@@ -73,21 +71,6 @@ exports.handler = async (event, context) => {
       };
     }
     
-    // Get the response body
-    const responseBody = await response.text();
-    console.log('Response body:', responseBody);
-    
-    // If the response is JSON, parse and re-stringify to ensure it's valid
-    let finalBody = responseBody;
-    if (contentType && contentType.includes('application/json')) {
-      try {
-        const jsonData = JSON.parse(responseBody);
-        finalBody = JSON.stringify(jsonData);
-      } catch (e) {
-        console.log('Response is not valid JSON, returning as-is');
-      }
-    }
-    
     // Return the response
     return {
       statusCode: response.status,
@@ -95,9 +78,9 @@ exports.handler = async (event, context) => {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Content-Type': contentType || 'application/json'
+        'Content-Type': 'application/json'
       },
-      body: finalBody
+      body: responseText
     };
   } catch (error) {
     console.error('Error in API proxy:', error);

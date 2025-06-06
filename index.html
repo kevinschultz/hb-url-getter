@@ -626,8 +626,6 @@
 
         // API call helper with better error handling
         async function apiCall(endpoint, method = 'GET', body = null) {
-            // When using Netlify functions, we don't need to send the API key
-            // The function handles authentication server-side
             const headers = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -650,12 +648,10 @@
             try {
                 const response = await fetch(url, options);
                 
-                // Check if response is ok before trying to parse
                 if (!response.ok) {
                     let errorMessage = `API Error: ${response.status}`;
                     try {
                         const data = await response.json();
-                        // Handle validation errors
                         if (response.status === 422 && data.errors) {
                             errorMessage = Object.entries(data.errors)
                                 .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
@@ -664,52 +660,24 @@
                             errorMessage = data.message || data.error || errorMessage;
                         }
                     } catch (e) {
-                        // Response wasn't JSON, try to get text
-                        try {
-                            const text = await response.text();
-                            if (text) {
-                                errorMessage = text;
-                            }
-                        } catch (textError) {
-                            console.error('Failed to parse error response');
-                        }
+                        console.error('Failed to parse error response as JSON');
                     }
                     throw new Error(errorMessage);
                 }
                 
-                // For successful responses, check if there's content
-                const contentLength = response.headers.get('content-length');
-                const contentType = response.headers.get('content-type');
-                
-                // If no content or content-length is 0, return success
-                if (!contentLength || contentLength === '0' || response.status === 204) {
-                    console.log('Empty successful response');
+                // Special handling for enrollment endpoint which returns empty response
+                if (endpoint.includes('/enrollments/enrollStudent')) {
+                    console.log('Enrollment endpoint - expecting empty response');
                     return { success: true };
                 }
                 
-                // Try to parse as JSON if content-type indicates JSON
-                if (contentType && contentType.includes('application/json')) {
-                    try {
-                        const data = await response.json();
-                        return data;
-                    } catch (e) {
-                        console.error('Failed to parse JSON response');
-                        // If JSON parsing fails, try to get text
-                        const text = await response.text();
-                        console.log('Response text:', text);
-                        // Return a success object with the text
-                        return { success: true, message: text };
-                    }
-                } else {
-                    // For non-JSON content types, return the text
-                    const text = await response.text();
-                    console.log('Non-JSON response:', text);
-                    return { success: true, message: text };
-                }
+                // For all other endpoints, parse as JSON normally
+                const data = await response.json();
+                console.log('Response data:', data);
+                return data;
+                
             } catch (error) {
-                // Network error or other fetch failure
                 if (error.message === 'Failed to fetch') {
-                    console.error('Network error - check if Netlify function is deployed correctly');
                     throw new Error('Unable to connect to the server. Please try again.');
                 }
                 console.error('API Error:', error);
