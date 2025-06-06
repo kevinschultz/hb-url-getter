@@ -650,7 +650,7 @@
             try {
                 const response = await fetch(url, options);
                 
-                // Check if response is ok before trying to parse JSON
+                // Check if response is ok before trying to parse
                 if (!response.ok) {
                     let errorMessage = `API Error: ${response.status}`;
                     try {
@@ -664,19 +664,47 @@
                             errorMessage = data.message || data.error || errorMessage;
                         }
                     } catch (e) {
-                        // Response wasn't JSON
-                        console.error('Failed to parse error response as JSON');
+                        // Response wasn't JSON, try to get text
+                        try {
+                            const text = await response.text();
+                            if (text) {
+                                errorMessage = text;
+                            }
+                        } catch (textError) {
+                            console.error('Failed to parse error response');
+                        }
                     }
                     throw new Error(errorMessage);
                 }
                 
-                // Try to parse successful response
-                try {
-                    const data = await response.json();
-                    return data;
-                } catch (e) {
-                    console.error('Failed to parse response as JSON');
-                    throw new Error('Invalid response format from server');
+                // For successful responses, check if there's content
+                const contentLength = response.headers.get('content-length');
+                const contentType = response.headers.get('content-type');
+                
+                // If no content or content-length is 0, return success
+                if (!contentLength || contentLength === '0' || response.status === 204) {
+                    console.log('Empty successful response');
+                    return { success: true };
+                }
+                
+                // Try to parse as JSON if content-type indicates JSON
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        const data = await response.json();
+                        return data;
+                    } catch (e) {
+                        console.error('Failed to parse JSON response');
+                        // If JSON parsing fails, try to get text
+                        const text = await response.text();
+                        console.log('Response text:', text);
+                        // Return a success object with the text
+                        return { success: true, message: text };
+                    }
+                } else {
+                    // For non-JSON content types, return the text
+                    const text = await response.text();
+                    console.log('Non-JSON response:', text);
+                    return { success: true, message: text };
                 }
             } catch (error) {
                 // Network error or other fetch failure
@@ -872,7 +900,11 @@
                     classId: parseInt(selectedCourseId)
                 };
                 
-                await apiCall('/enrollments/enrollStudent', 'POST', enrollmentData);
+                console.log('Enrolling student:', enrollmentData);
+                
+                // This endpoint might return empty response or non-JSON
+                const enrollResponse = await apiCall('/enrollments/enrollStudent', 'POST', enrollmentData);
+                console.log('Enrollment response:', enrollResponse);
                 
                 // Get pre-authenticated URL (requires both userId and classId)
                 const urlData = {
@@ -880,7 +912,15 @@
                     classId: parseInt(selectedCourseId)
                 };
                 
+                console.log('Getting pre-authenticated URL:', urlData);
+                
                 const urlResponse = await apiCall('/enrollments/createPreAuthenticatedUrl', 'POST', urlData);
+                console.log('URL response:', urlResponse);
+                
+                // Check if we got a URL in the response
+                if (!urlResponse || !urlResponse.url) {
+                    throw new Error('No login URL received from server');
+                }
                 
                 // Show success section
                 const loginUrl = urlResponse.url;

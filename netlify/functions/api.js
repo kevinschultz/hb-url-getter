@@ -53,8 +53,40 @@ exports.handler = async (event, context) => {
     // Make the request
     const response = await fetch(url, fetchOptions);
     
+    // Get content type and length
+    const contentType = response.headers.get('content-type');
+    const contentLength = response.headers.get('content-length');
+    
+    console.log(`Response status: ${response.status}, Content-Type: ${contentType}, Content-Length: ${contentLength}`);
+    
+    // Handle empty responses
+    if (!contentLength || contentLength === '0' || response.status === 204) {
+      return {
+        statusCode: response.status || 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ success: true })
+      };
+    }
+    
     // Get the response body
     const responseBody = await response.text();
+    console.log('Response body:', responseBody);
+    
+    // If the response is JSON, parse and re-stringify to ensure it's valid
+    let finalBody = responseBody;
+    if (contentType && contentType.includes('application/json')) {
+      try {
+        const jsonData = JSON.parse(responseBody);
+        finalBody = JSON.stringify(jsonData);
+      } catch (e) {
+        console.log('Response is not valid JSON, returning as-is');
+      }
+    }
     
     // Return the response
     return {
@@ -63,9 +95,9 @@ exports.handler = async (event, context) => {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Content-Type': response.headers.get('content-type') || 'application/json'
+        'Content-Type': contentType || 'application/json'
       },
-      body: responseBody
+      body: finalBody
     };
   } catch (error) {
     console.error('Error in API proxy:', error);
