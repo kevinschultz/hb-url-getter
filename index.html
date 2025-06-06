@@ -576,50 +576,20 @@
     <script>
         // Configuration
         const CONFIG = {
-            //apiKey: atob('ODdiY2EzOTU3N2FlMmYyMjg0ZDkzNDczYWEzOWZjNWNmOTQ4NGU2NzY3ODkzOWY4NzgwYjMwZDZmMmNhM2RjMA=='),
             organizationId: 178,
             apiBaseUrl: '/.netlify/functions/api',
-            passwordHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', // Default: "password"
-            // CORS Proxy Configuration (uncomment one to use)
-            // WARNING: Only use for testing! Never use in production with real API keys!
-            // corsProxy: 'https://cors-anywhere.herokuapp.com/', // Often requires activation
-            // corsProxy: 'https://api.allorigins.win/raw?url=', // Free alternative
-            // corsProxy: 'https://proxy.cors.sh/', // Another alternative
+            passwordHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' // Default: "password"
         };
-
-        let currentUser = null;
-        let availableCourses = [];
-        let selectedCourseId = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             // Auto-focus password field
             document.getElementById('password').focus();
             
-            // Check if running on GitHub Pages without CORS proxy
-            if (window.location.hostname.includes('github.io') && !CONFIG.corsProxy) {
-                document.getElementById('corsWarning').classList.remove('hidden');
-            }
-            
-            // Add helper function for enabling CORS proxy
-            window.enableCorsProxy = function(proxyUrl = 'https://api.allorigins.win/raw?url=') {
-                CONFIG.corsProxy = proxyUrl;
-                console.log('✅ CORS proxy enabled:', proxyUrl);
-                console.warn('⚠️ WARNING: This is for testing only! Do not use in production!');
-                return 'CORS proxy enabled. You can now test the application.';
-            };
-            
-            // Log helpful message if CORS is likely to be an issue
-            if (window.location.protocol === 'https:' && window.location.hostname.includes('github.io')) {
-                console.log('🔒 CORS Issue Detected!');
-                console.log('You\'re running this from GitHub Pages, which will be blocked by CORS.');
-                console.log('');
-                console.log('Quick fix for testing:');
-                console.log('1. Open the browser console (F12)');
-                console.log('2. Type: enableCorsProxy()');
-                console.log('3. Press Enter');
-                console.log('');
-                console.log('For production, see the README for proper backend setup.');
+            // Hide CORS warning since we're using Netlify functions
+            const corsWarning = document.getElementById('corsWarning');
+            if (corsWarning) {
+                corsWarning.remove();
             }
         });
 
@@ -656,8 +626,9 @@
 
         // API call helper with better error handling
         async function apiCall(endpoint, method = 'GET', body = null) {
+            // When using Netlify functions, we don't need to send the API key
+            // The function handles authentication server-side
             const headers = {
-                'Authorization': `Bearer ${CONFIG.apiKey}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             };
@@ -672,16 +643,7 @@
                 options.body = JSON.stringify(body);
             }
 
-            // Build URL with optional CORS proxy
-            let url;
-            if (CONFIG.corsProxy) {
-                // Using CORS proxy
-                url = CONFIG.corsProxy + encodeURIComponent(CONFIG.apiBaseUrl + endpoint);
-                console.warn('⚠️ Using CORS proxy - NOT secure for production!');
-            } else {
-                url = CONFIG.apiBaseUrl + endpoint;
-            }
-            
+            const url = CONFIG.apiBaseUrl + endpoint;
             console.log('API Call:', method, url);
             if (body) console.log('Body:', body);
 
@@ -719,12 +681,8 @@
             } catch (error) {
                 // Network error or other fetch failure
                 if (error.message === 'Failed to fetch') {
-                    console.error('Network error - likely a CORS issue');
-                    console.error('To fix this, either:');
-                    console.error('1. Enable a CORS proxy in the CONFIG object (for testing only)');
-                    console.error('2. Deploy a backend server (recommended for production)');
-                    console.error('3. Ask the API provider to whitelist your domain');
-                    throw new Error('Unable to connect to the server. This is likely a CORS issue. See console for solutions.');
+                    console.error('Network error - check if Netlify function is deployed correctly');
+                    throw new Error('Unable to connect to the server. Please try again.');
                 }
                 console.error('API Error:', error);
                 throw error;
@@ -837,8 +795,8 @@
             try {
                 // Get classes filtered by organization
                 const params = new URLSearchParams({
-                    'filter[organizationId]': CONFIG.organizationId,
-                    'limit': 50
+                    'filter[organizationId]': CONFIG.organizationId.toString(),
+                    'limit': '50'
                 });
                 
                 const response = await apiCall(`/classes/?${params.toString()}`);
