@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northeastern University | Course Enrollment Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Northeastern Brand Colors */
+            --nu-red: #C8102E;
+            --nu-black: #000000;
+            --nu-white: #FFFFFF;
+            --nu-gold: #A4804A;
+            --nu-gray-light: #F5F5F5;
+            --nu-gray-medium: #E0E0E0;
+            --nu-gray-dark: #666666;
+            --nu-red-dark: #A00D26;
+            --nu-red-light: #E51937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--nu-gray-light);
+            color: var(--nu-black);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--nu-black);
+            padding: 24px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            color: var(--nu-white);
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+
+        .logo strong {
+            font-weight: 700;
+        }
+
+        .header-divider {
+            width: 2px;
+            height: 30px;
+            background: var(--nu-red);
+            margin: 0 20px;
+        }
+
+        .portal-title {
+            color: var(--nu-white);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--nu-white);
+            border-radius: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--nu-red);
+        }
+
+        h1 {
+            color: var(--nu-black);
+            margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--nu-gray-dark);
+            margin-bottom: 32px;
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        h2 {
+            color: var(--nu-black);
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--nu-black);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--nu-gray-medium);
+            background: var(--nu-white);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--nu-red);
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--nu-red);
+            color: var(--nu-white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--nu-red-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--nu-black);
+            color: var(--nu-white);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            background: var(--nu-gray-medium);
+            color: var(--nu-gray-dark);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Messages */
+        .message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message::before {
+            content: '';
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .error {
+            background: #FEE;
+            color: #C00;
+            border: 1px solid #FCC;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .error::before {
+            background: #C00;
+        }
+
+        .success {
+            background: #EFE;
+            color: #060;
+            border: 1px solid #CFC;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .success::before {
+            background: #060;
+        }
+
+        .info {
+            background: #F0F8FF;
+            color: #069;
+            border: 1px solid #CCE5FF;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .info::before {
+            background: #069;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: var(--nu-white);
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .spinner {
+            border: 4px solid var(--nu-gray-light);
+            border-top: 4px solid var(--nu-red);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--nu-black);
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        /* Success Section */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--nu-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .success-icon::after {
+            content: '✓';
+            color: var(--nu-white);
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .login-url-container {
+            background: var(--nu-gray-light);
+            border: 2px solid var(--nu-gray-medium);
+            padding: 24px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .login-url-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--nu-gray-dark);
+            margin-bottom: 12px;
+        }
+
+        .login-url {
+            color: var(--nu-red);
+            text-decoration: none;
+            word-break: break-all;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--nu-white);
+            border: 1px solid var(--nu-gray-medium);
+        }
+
+        .login-url:hover {
+            text-decoration: underline;
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-divider {
+                display: none;
+            }
+
+            .portal-title {
+                margin-top: 8px;
+                font-size: 16px;
+            }
+
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+        }
+
+        /* Course List Styling */
+        .course-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .course-item {
+            border: 2px solid var(--nu-gray-medium);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: var(--nu-white);
+        }
+
+        .course-item:hover {
+            border-color: var(--nu-red);
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.1);
+        }
+
+        .course-item.selected {
+            border-color: var(--nu-red);
+            background: rgba(200, 16, 46, 0.05);
+        }
+
+        .course-item.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            color: var(--nu-red);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .course-name {
+            font-weight: 700;
+            color: var(--nu-black);
+            margin-bottom: 4px;
+        }
+
+        .course-details {
+            font-size: 14px;
+            color: var(--nu-gray-dark);
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div class="logo">
+                    <strong>NORTHEASTERN</strong> UNIVERSITY
+                </div>
+                <div class="header-divider"></div>
+                <div class="portal-title">Course Enrollment Portal</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- CORS Warning for GitHub Pages -->
+        <div id="corsWarning" class="card hidden" style="background: #FFF3CD; border-color: #FFE69C; margin-bottom: 20px;">
+            <div style="display: flex; align-items: start; gap: 16px;">
+                <div style="font-size: 24px;">⚠️</div>
+                <div>
+                    <h2 style="font-size: 20px; margin-bottom: 12px; color: #664D03;">CORS Configuration Required</h2>
+                    <p style="color: #664D03; margin-bottom: 16px;">This application needs to be configured to work with GitHub Pages.</p>
+                    <button class="btn btn-primary" onclick="enableCorsProxyUI()" style="background: #664D03; text-transform: none; letter-spacing: normal; padding: 12px 24px; width: auto;">
+                        Enable Test Mode (Not for Production)
+                    </button>
+                    <p style="color: #664D03; margin-top: 12px; font-size: 14px;">
+                        For production deployment, please see the documentation for proper backend setup.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <!-- Authentication Section -->
+            <div id="authSection" class="fade-in">
+                <h1>Welcome</h1>
+                <p class="subtitle">Please enter your access code to continue</p>
+                <div class="form-group">
+                    <label for="password">Access Code</label>
+                    <input type="password" id="password" placeholder="Enter your access code">
+                </div>
+                <button class="btn btn-primary" onclick="authenticate()">Access Portal</button>
+                <div id="authError" class="error message hidden"></div>
+            </div>
+
+            <!-- Main Application -->
+            <div id="mainApp" class="hidden">
+                <!-- Email Input Section -->
+                <div id="emailSection" class="fade-in">
+                    <h1>Course Enrollment</h1>
+                    <p class="subtitle">Enter your Northeastern email to get started</p>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="student@northeastern.edu" autocomplete="email">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkUser()">Continue</button>
+                    <div id="emailError" class="error message hidden"></div>
+                </div>
+
+                <!-- New User Registration -->
+                <div id="newUserSection" class="hidden fade-in">
+                    <h1>Create Your Account</h1>
+                    <p class="subtitle">We need a few details to set up your enrollment</p>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" placeholder="Enter your first name" autocomplete="given-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Enter your last name" autocomplete="family-name">
+                    </div>
+                    <button class="btn btn-primary" onclick="createUser()">Create Account</button>
+                    <div id="createUserError" class="error message hidden"></div>
+                </div>
+
+                <!-- Course Selection -->
+                <div id="courseSection" class="hidden fade-in">
+                    <h1>Select Your Course</h1>
+                    <p class="subtitle">Choose from the available courses below</p>
+                    <div id="courseGrid" class="course-grid">
+                        <!-- Courses will be dynamically loaded here -->
+                    </div>
+                    <button class="btn btn-primary" onclick="enrollInCourse()" id="enrollButton" disabled>Enroll in Selected Course</button>
+                    <div id="courseError" class="error message hidden"></div>
+                </div>
+
+                <!-- Success Section -->
+                <div id="successSection" class="hidden fade-in text-center">
+                    <div class="success-icon"></div>
+                    <h1>Enrollment Complete!</h1>
+                    <p class="subtitle mb-0">You've been successfully enrolled in your course</p>
+                    
+                    <div class="login-url-container">
+                        <div class="login-url-label">Your Personal Access Link</div>
+                        <a href="#" id="loginUrl" class="login-url" target="_blank"></a>
+                        <button class="btn btn-secondary" onclick="copyLoginUrl()">Copy Link to Clipboard</button>
+                    </div>
+                    
+                    <div id="copySuccess" class="success message hidden">Link copied to clipboard!</div>
+                    
+                    <button class="btn btn-primary" onclick="resetPortal()" style="margin-top: 24px;">Enroll Another Student</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Processing your request...</div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            apiKey: atob('ODdiY2EzOTU3N2FlMmYyMjg0ZDkzNDczYWEzOWZjNWNmOTQ4NGU2NzY3ODkzOWY4NzgwYjMwZDZmMmNhM2RjMA=='),
+            organizationId: 178,
+            apiBaseUrl: '/.netlify/functions/api',
+            passwordHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', // Default: "password"
+            // CORS Proxy Configuration (uncomment one to use)
+            // WARNING: Only use for testing! Never use in production with real API keys!
+            // corsProxy: 'https://cors-anywhere.herokuapp.com/', // Often requires activation
+            // corsProxy: 'https://api.allorigins.win/raw?url=', // Free alternative
+            // corsProxy: 'https://proxy.cors.sh/', // Another alternative
+        };
+
+        let currentUser = null;
+        let availableCourses = [];
+        let selectedCourseId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-focus password field
+            document.getElementById('password').focus();
+            
+            // Check if running on GitHub Pages without CORS proxy
+            if (window.location.hostname.includes('github.io') && !CONFIG.corsProxy) {
+                document.getElementById('corsWarning').classList.remove('hidden');
+            }
+            
+            // Add helper function for enabling CORS proxy
+            window.enableCorsProxy = function(proxyUrl = 'https://api.allorigins.win/raw?url=') {
+                CONFIG.corsProxy = proxyUrl;
+                console.log('✅ CORS proxy enabled:', proxyUrl);
+                console.warn('⚠️ WARNING: This is for testing only! Do not use in production!');
+                return 'CORS proxy enabled. You can now test the application.';
+            };
+            
+            // Log helpful message if CORS is likely to be an issue
+            if (window.location.protocol === 'https:' && window.location.hostname.includes('github.io')) {
+                console.log('🔒 CORS Issue Detected!');
+                console.log('You\'re running this from GitHub Pages, which will be blocked by CORS.');
+                console.log('');
+                console.log('Quick fix for testing:');
+                console.log('1. Open the browser console (F12)');
+                console.log('2. Type: enableCorsProxy()');
+                console.log('3. Press Enter');
+                console.log('');
+                console.log('For production, see the README for proper backend setup.');
+            }
+        });
+
+        // Enable CORS proxy from UI
+        function enableCorsProxyUI() {
+            enableCorsProxy();
+            document.getElementById('corsWarning').classList.add('hidden');
+            alert('Test mode enabled! You can now use the application.\n\nRemember: This is only for testing. Never use this in production with real data.');
+        }
+
+        // Authentication
+        async function authenticate() {
+            const password = document.getElementById('password').value;
+            const hash = await sha256(password);
+            
+            if (hash === CONFIG.passwordHash) {
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('authError').classList.add('hidden');
+                // Focus email field
+                setTimeout(() => document.getElementById('email').focus(), 100);
+            } else {
+                showError('authError', 'Invalid access code. Please try again.');
+            }
+        }
+
+        // SHA-256 hash function
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // API call helper with better error handling
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const headers = {
+                'Authorization': `Bearer ${CONFIG.apiKey}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+
+            const options = {
+                method,
+                headers,
+                mode: 'cors'
+            };
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            // Build URL with optional CORS proxy
+            let url;
+            if (CONFIG.corsProxy) {
+                // Using CORS proxy
+                url = CONFIG.corsProxy + encodeURIComponent(CONFIG.apiBaseUrl + endpoint);
+                console.warn('⚠️ Using CORS proxy - NOT secure for production!');
+            } else {
+                url = CONFIG.apiBaseUrl + endpoint;
+            }
+            
+            console.log('API Call:', method, url);
+            if (body) console.log('Body:', body);
+
+            try {
+                const response = await fetch(url, options);
+                
+                // Check if response is ok before trying to parse JSON
+                if (!response.ok) {
+                    let errorMessage = `API Error: ${response.status}`;
+                    try {
+                        const data = await response.json();
+                        // Handle validation errors
+                        if (response.status === 422 && data.errors) {
+                            errorMessage = Object.entries(data.errors)
+                                .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+                                .join('; ');
+                        } else {
+                            errorMessage = data.message || data.error || errorMessage;
+                        }
+                    } catch (e) {
+                        // Response wasn't JSON
+                        console.error('Failed to parse error response as JSON');
+                    }
+                    throw new Error(errorMessage);
+                }
+                
+                // Try to parse successful response
+                try {
+                    const data = await response.json();
+                    return data;
+                } catch (e) {
+                    console.error('Failed to parse response as JSON');
+                    throw new Error('Invalid response format from server');
+                }
+            } catch (error) {
+                // Network error or other fetch failure
+                if (error.message === 'Failed to fetch') {
+                    console.error('Network error - likely a CORS issue');
+                    console.error('To fix this, either:');
+                    console.error('1. Enable a CORS proxy in the CONFIG object (for testing only)');
+                    console.error('2. Deploy a backend server (recommended for production)');
+                    console.error('3. Ask the API provider to whitelist your domain');
+                    throw new Error('Unable to connect to the server. This is likely a CORS issue. See console for solutions.');
+                }
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Check if user exists
+        async function checkUser() {
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            
+            // Validate email
+            if (!email.endsWith('@northeastern.edu')) {
+                showError('emailError', 'Please use a valid @northeastern.edu email address');
+                return;
+            }
+
+            // Email format validation
+            const emailRegex = /^[^\s@]+@northeastern\.edu$/;
+            if (!emailRegex.test(email)) {
+                showError('emailError', 'Please enter a valid email format');
+                return;
+            }
+
+            showLoading(true);
+            hideError('emailError');
+
+            try {
+                // Get users filtered by email and organization
+                const params = new URLSearchParams({
+                    'filter[email]': email,
+                    'filter[organizationId]': CONFIG.organizationId.toString(),
+                    'limit': '50'
+                });
+                
+                const response = await apiCall(`/users/?${params.toString()}`);
+                
+                // Handle paginated response
+                const users = response.data || [];
+                currentUser = users.find(user => 
+                    user.email && user.email.toLowerCase() === email
+                );
+
+                if (currentUser) {
+                    // User exists, load courses
+                    await loadCourses();
+                    transitionTo('emailSection', 'courseSection');
+                } else {
+                    // New user - store email for later use
+                    document.getElementById('email').dataset.pendingEmail = email;
+                    transitionTo('emailSection', 'newUserSection');
+                }
+            } catch (error) {
+                showError('emailError', `Error checking user: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Create new user
+        async function createUser() {
+            const email = document.getElementById('email').dataset.pendingEmail;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+
+            // Validation
+            if (!firstName || !lastName) {
+                showError('createUserError', 'Please enter both first and last name');
+                return;
+            }
+
+            if (firstName.length < 2 || lastName.length < 2) {
+                showError('createUserError', 'Names must be at least 2 characters long');
+                return;
+            }
+
+            showLoading(true);
+            hideError('createUserError');
+
+            try {
+                const userData = {
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    organizationId: CONFIG.organizationId // Changed back to 'z'
+                };
+
+                const response = await apiCall('/users/', 'POST', userData);
+                
+                // The response contains the ID of the created user
+                currentUser = {
+                    id: response.id,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    organizationId: CONFIG.organizationId
+                };
+                
+                // Load courses for the new user
+                await loadCourses();
+                transitionTo('newUserSection', 'courseSection');
+            } catch (error) {
+                showError('createUserError', `Error creating account: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Load available courses
+        async function loadCourses() {
+            try {
+                // Get classes filtered by organization
+                const params = new URLSearchParams({
+                    'filter[organizationId]': CONFIG.organizationId,
+                    'limit': 50
+                });
+                
+                const response = await apiCall(`/classes/?${params.toString()}`);
+                
+                // Handle paginated response
+                availableCourses = response.data || [];
+                
+                const courseGrid = document.getElementById('courseGrid');
+                courseGrid.innerHTML = '';
+                
+                if (availableCourses.length === 0) {
+                    courseGrid.innerHTML = '<div class="info message">No courses available at this time</div>';
+                    document.getElementById('enrollButton').style.display = 'none';
+                    return;
+                }
+                
+                // Show enroll button
+                document.getElementById('enrollButton').style.display = 'block';
+                
+                // Create course items
+                availableCourses.forEach(course => {
+                    const courseItem = document.createElement('div');
+                    courseItem.className = 'course-item';
+                    courseItem.dataset.courseId = course.id;
+                    courseItem.onclick = () => selectCourse(course.id);
+                    
+                    courseItem.innerHTML = `
+                        <div class="course-name">${course.name || `Course ${course.id}`}</div>
+                        <div class="course-details">
+                            ${course.description || 'Click to select this course'}
+                        </div>
+                    `;
+                    
+                    courseGrid.appendChild(courseItem);
+                });
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                showError('courseError', 'Error loading courses. Please try again.');
+            }
+        }
+
+        // Select a course
+        function selectCourse(courseId) {
+            // Remove previous selection
+            document.querySelectorAll('.course-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked course
+            const selectedItem = document.querySelector(`[data-course-id="${courseId}"]`);
+            if (selectedItem) {
+                selectedItem.classList.add('selected');
+                selectedCourseId = courseId;
+                document.getElementById('enrollButton').disabled = false;
+                hideError('courseError');
+            }
+        }
+
+        // Enroll in selected course
+        async function enrollInCourse() {
+            if (!selectedCourseId) {
+                showError('courseError', 'Please select a course');
+                return;
+            }
+
+            showLoading(true);
+            hideError('courseError');
+
+            try {
+                // Create enrollment
+                const enrollmentData = {
+                    userId: currentUser.id,
+                    classId: parseInt(selectedCourseId)
+                };
+                
+                await apiCall('/enrollments/enrollStudent', 'POST', enrollmentData);
+                
+                // Get pre-authenticated URL (requires both userId and classId)
+                const urlData = {
+                    userId: currentUser.id,
+                    classId: parseInt(selectedCourseId)
+                };
+                
+                const urlResponse = await apiCall('/enrollments/createPreAuthenticatedUrl', 'POST', urlData);
+                
+                // Show success section
+                const loginUrl = urlResponse.url;
+                document.getElementById('loginUrl').href = loginUrl;
+                document.getElementById('loginUrl').textContent = loginUrl;
+                transitionTo('courseSection', 'successSection');
+            } catch (error) {
+                showError('courseError', `Enrollment error: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Copy login URL to clipboard
+        async function copyLoginUrl() {
+            const url = document.getElementById('loginUrl').href;
+            
+            try {
+                await navigator.clipboard.writeText(url);
+                const successMsg = document.getElementById('copySuccess');
+                successMsg.classList.remove('hidden');
+                setTimeout(() => successMsg.classList.add('hidden'), 3000);
+            } catch (error) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const successMsg = document.getElementById('copySuccess');
+                successMsg.classList.remove('hidden');
+                setTimeout(() => successMsg.classList.add('hidden'), 3000);
+            }
+        }
+
+        // Reset portal for another enrollment
+        function resetPortal() {
+            // Clear form data
+            document.getElementById('email').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            delete document.getElementById('email').dataset.pendingEmail;
+            
+            // Reset state
+            currentUser = null;
+            selectedCourseId = null;
+            availableCourses = [];
+            
+            // Hide all sections except email
+            document.querySelectorAll('#mainApp > div').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById('emailSection').classList.remove('hidden');
+            
+            // Clear any error messages
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.classList.add('hidden');
+            });
+            
+            // Focus email field
+            document.getElementById('email').focus();
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden');
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function transitionTo(fromId, toId) {
+            document.getElementById(fromId).classList.add('hidden');
+            const toElement = document.getElementById(toId);
+            toElement.classList.remove('hidden');
+            toElement.classList.add('fade-in');
+        }
+
+        // Keyboard event handlers
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                
+                if (activeElement.id === 'password') {
+                    authenticate();
+                } else if (activeElement.id === 'email') {
+                    checkUser();
+                } else if (activeElement.id === 'firstName' || activeElement.id === 'lastName') {
+                    createUser();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
