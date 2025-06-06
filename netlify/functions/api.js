@@ -3,7 +3,7 @@ exports.handler = async (event, context) => {
   const API_URL = 'https://homebase.english3.com/api/public';
   
   // Forward the request to the actual API
-  const response = await fetch(API_URL + event.path.replace('/.netlify/functions/api', '') + '?' + event.rawQuery, {
+  const response = await fetch(API_URL + event.path.replace('/netlify/functions/api', '') + '?' + event.rawQuery, {
     method: event.httpMethod,
     headers: {
       'Authorization': `Bearer ${API_KEY}`,
