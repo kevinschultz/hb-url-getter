@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Northeastern University | Course Enrollment Portal</title>
+    <title>Homebase URL Generator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -464,10 +464,10 @@
         <div class="header-content">
             <div style="display: flex; align-items: center;">
                 <div class="logo">
-                    <strong>NORTHEASTERN</strong> UNIVERSITY
+                    <strong>Super Duper</strong> Magical
                 </div>
                 <div class="header-divider"></div>
-                <div class="portal-title">Course Enrollment Portal</div>
+                <div class="portal-title">Homebase URL Generator</div>
             </div>
         </div>
     </header>
@@ -509,7 +509,7 @@
                 <!-- Email Input Section -->
                 <div id="emailSection" class="fade-in">
                     <h1>Course Enrollment</h1>
-                    <p class="subtitle">Enter your Northeastern email to get started</p>
+                    <p class="subtitle">Enter the Northeastern email of the student to check on:</p>
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" placeholder="student@northeastern.edu" autocomplete="email">
@@ -536,8 +536,8 @@
 
                 <!-- Course Selection -->
                 <div id="courseSection" class="hidden fade-in">
-                    <h1>Select Your Course</h1>
-                    <p class="subtitle">Choose from the available courses below</p>
+                    <h1>Select the Course</h1>
+                    <p class="subtitle">Choose one course here to enroll and/or generate a login URL for:</p>
                     <div id="courseGrid" class="course-grid">
                         <!-- Courses will be dynamically loaded here -->
                     </div>
@@ -549,10 +549,10 @@
                 <div id="successSection" class="hidden fade-in text-center">
                     <div class="success-icon"></div>
                     <h1>Enrollment Complete!</h1>
-                    <p class="subtitle mb-0">You've been successfully enrolled in your course</p>
+                    <p class="subtitle mb-0">URL generated!</p>
                     
                     <div class="login-url-container">
-                        <div class="login-url-label">Your Personal Access Link</div>
+                        <div class="login-url-label">Direct Access Link</div>
                         <a href="#" id="loginUrl" class="login-url" target="_blank"></a>
                         <button class="btn btn-secondary" onclick="copyLoginUrl()">Copy Link to Clipboard</button>
                     </div>
